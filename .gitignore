@@ -1,32 +1,119 @@
-# Prerequisites
-*.d
+#include <iostream>
+#include <string>
+#include <exception>
+#include <stdexcept>
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+using namespace std;
 
-# Precompiled Headers
-*.gch
-*.pch
+class Person
+{
+private:
+    string firstName, lastName, gender, country, email;
+    int age;
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+public:
 
-# Fortran module files
-*.mod
-*.smod
+    Person(){
+        firstName = "Semenov";
+        lastName = "Semen";
+        age = 25;
+        gender = "Male";
+        country = "Ukraine";
+        email = "semenov@gmail.com";
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+    }
 
-# Executables
-*.exe
-*.out
-*.app
+    Person(string myFirstName, string myLastName, int myAge, string myGender, string myCountry, string myEmail){
+        if (myAge < 0){
+            throw invalid_argument ("Age cannot be negative.");
+        }
+        firstName = myFirstName;
+        lastName = myLastName;
+        age = myAge;
+        gender = myGender;
+        country = myCountry;
+        email = myEmail;
+    }
+
+    const string& getFirstName () const { return firstName; }
+
+    const string& getLastName () const { return lastName; }
+
+    int getAge () const { return age; }
+
+    const string& getGender () const { return gender; }
+
+    const string& getCountry () const { return country; }
+
+    const string& getEmail () const { return email; }
+
+    void print()const {
+        cout << "Your person is " << Person::getFirstName() << ' ' << Person::getLastName() << ". " << endl;
+        cout << Person::getGender() << ". Age: " << Person::getAge() << '.' << endl;
+        cout << "Live in " << Person::getCountry() << '.' << endl;
+        cout << "Email: " << Person::getEmail() << '.' << endl;
+    }
+
+    void change_email (const string& email)
+    {
+        this->email = email;
+    }
+
+    bool isAdult() const {
+        return age>=18;
+    }
+
+    bool isFromUkraine() const {
+        if (country == "Ukraine")
+            return true;
+    }
+};
+
+int main()
+{
+    string firstName, lastName, gender, country, email;
+    int age;
+    cout << "Enter first name of person" << endl;
+    getline(cin, firstName);
+    cout << "Enter last name of person" << endl;
+    getline(cin, lastName);
+    cout << "Enter age" << endl;
+    cin >> age;
+    cout << "Enter gender (Male/Female)" << endl;
+    cin >> gender;
+    cout << "Enter country where person live" << endl;
+    cin >> country;
+    cout << "Enter an e-mail of person" << endl;
+    cin >> email;
+    cout << endl;
+    try
+    {
+        Person person(firstName, lastName, age, gender, country, email);
+        person.print();
+        cout << endl;
+
+        cout << "Is the " << person.getFirstName() << ' ' << person.getLastName() << " an adult?" << endl;
+        if (person.isAdult())
+            cout << "Yes" << endl;
+        else
+            cout << "No" << endl;
+
+        cout << "Is the " << person.getFirstName() << ' ' << person.getLastName() << " live in Ukraine?" << endl;
+        if (person.isFromUkraine())
+            cout << "Yes" << endl;
+        else
+            cout << "No" << endl;
+
+        cout << "Let`s do some changes. Enter a new e-mail:" << endl;
+        string newEmail;
+        cin >> newEmail;
+        person.change_email(newEmail);
+        cout << "So now " << person.getFirstName() << ' ' << person.getLastName() << " has an e-mail: " << person.getEmail() << '.' << endl;
+
+    }
+    catch(const exception& ex)
+    {
+        cout << "Person cannot be created. " << ex.what() << endl;
+    }
+    return 0;
+}
